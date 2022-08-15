@@ -74,4 +74,26 @@ contract SupplyChainFarmaceutica {
     return false;
   }
   
+  function crearNuevaOrden (string memory codigo, string memory codigoArticulo, string memory codigoProveedor, uint128 cantidad) public {
+    require(!existeOrden(codigoBarras), "El orden con el número de codigo ya existe");
+    if (bytes(codigoArticulo).length != 0 && bytes(codigoProveedor).length != 0)
+    {
+       Articulo memory articuloOrden = consultarArticuloPorCodigo(codigoArticulo);
+       Proveedor memory proveedorOrden = consultarProveedorPorCodigo(codigoProveedor);
+       Orden memory nuevaOrden = Orden ({codigoOrden: codigo, articulo: articuloOrden,
+                                               proveedor: proveedorOrden,
+                                               cantidad: cantidad,
+                                               timeStamp: now});
+    listaOrdenes[msg.sender].push(nuevaOrden);
+  }
+  
+  function existeOrden(string memory codigo) private view returns (bool exists) {
+    for (uint i = 0; i<listaOrdenes[mesg.sender].length; i++){
+      if (keccak256(abi.encodePacked(listaOrdenes[msg.sender].[i].codigoOrden)) == keccak256(abi.encodePacked(codigo))){
+        return true;
+      }
+    }
+    return false;
+  }
+  
 }
