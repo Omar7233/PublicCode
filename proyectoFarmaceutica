@@ -1,0 +1,15 @@
+contract SupplyChainFarmaceutica {
+  
+  mapping(address => Articulo[]) listaArticulos;
+  mapping(address => Proveedor[]) istaProveedores;
+  mapping(address => Orden[]) ListaOrdenes;
+  mapping(address => Trazabilidad[]) trazabilidadArticulo;
+  
+  struct Articulo {
+    string codigoArticulo;
+    string descripcionArticulo;
+    string codigoBarrasArticulo;
+    string certificado();
+    string lote;
+  }
+}
