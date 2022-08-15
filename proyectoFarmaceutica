@@ -12,4 +12,66 @@ contract SupplyChainFarmaceutica {
     string certificado();
     string lote;
   }
+  
+  struct Proveedor {
+    string codigoProveedor;
+    string descripcionProveedor;
+    string direccionProveedor;
+  }
+ 
+  struct Orden {
+    string codigoOrden;
+    Artiulo articulo;
+    Proveedor proveedor;
+    uint128 cantidad;
+    uint timeStamp;
+  }
+  
+  struct Trazabilidad {
+    uint indiceTrazabilidad;
+    string codigoBarrasArticulo;
+    string descripcionArticulo;
+    string codigoOrden;
+    string descripcionProveedor;
+    string certificadoArticulo;
+    string loteTrazabilidad;
+  }
+  
+  function crearArticulo (string memory codigo, string memory descripcion, string memory codigoBarras, 
+                          string memory certificado, ctring memory lote) public {
+    require(!existeCodigoDeBarras(codigoBarras), "El codigo de barras ya existe");
+    Articulo memory nuevoArticulo = Articulo ({codigoArticulo: codigo,
+                                               descripcionArticulo: descripcion,
+                                               codigoBarrasArticulo: codigoBarras,
+                                               certificado: certificado,
+                                               lote: lote});
+    listaArticulos[msg.sender].push(nuevoArticulo);
+  }
+  
+  function existeCodigoDeBarras(string memory codigo) private view returns (bool exists) {
+    for (uint i = 0; i<listaArticulos[mesg.sender].length; i++){
+      if (keccak256(abi.encodePacked(listaArticulos[msg.sender].[i].codigoBarrasArticulo)) == keccak256(abi.encodePacked(codigo))){
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  function crearProveedor (string memory codigo, string memory descripcion, string memory direccion) public {
+    require(!existeProveedor(codigo), "El codigo de proveedor ya existe");
+    Proveedor memory nuevoProveedor = Proveedor ({codigoProveedor: codigo,
+                                               descripcionProveedor: descripcion,
+                                               direccionProveedor: direccion});
+    listaProveedores[msg.sender].push(nuevoProveedor);
+  }
+  
+  function existeProveedor(string memory codigo) private view returns (bool exists) {
+    for (uint i = 0; i<listaProveedores[mesg.sender].length; i++){
+      if (keccak256(abi.encodePacked(listaProveedores[msg.sender].[i].codigoProveedor)) == keccak256(abi.encodePacked(codigo))){
+        return true;
+      }
+    }
+    return false;
+  }
+  
 }
